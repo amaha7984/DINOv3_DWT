@@ -54,7 +54,7 @@ def train(rank, world_size, args):
     train_loader = prepare_dataloader(args.train_path, train_transforms(), batch_per_gpu, is_train=True)
     val_loader = prepare_dataloader(args.val_path, val_transforms(), batch_per_gpu, is_train=False)
 
-    model = WaveletDINO(num_classes=args.num_classes, use_all_bands=True).to(device)
+    model = DINOv3WithDWT(num_classes=args.num_classes, use_all_bands=True, weights=".../weights/dinov3_vitl16_pretrain_sat493m-eadcf0ff.pth", freeze_backbone=True).to(device)
     model = DDP(model, device_ids=[rank])
 
     optimizer = optim.AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
