@@ -6,8 +6,7 @@ from dwt import HaarTransform
 class DINOv3WithDWT(nn.Module):
     def __init__(self, num_classes=2, use_all_bands=True,
                  repo_dir=".../dinov3", #clone official dinov3
-                 weights=".../weights/dinov3_vitl16_pretrain_sat493m-eadcf0ff.pth", #download weight with process mentioned in DinoV3 official repository
-                 stats="SAT", freeze_backbone=True):
+                 weights=".../weights/dinov3_vitl16_pretrain_sat493m-eadcf0ff.pth", freeze_backbone=True):
         super().__init__()
         self.dwt = HaarTransform()
         self.use_all_bands = use_all_bands
