@@ -17,7 +17,8 @@ class DINOv3WithDWT(nn.Module):
             for p in self.backbone.parameters(): p.requires_grad = False
             self.backbone.eval()
 
-
+        self.mean, self.std = (0.496, 0.496, 0.496), (0.244, 0.244, 0.244)
+        
         self.feat_dim = getattr(self.backbone, "embed_dim", None) or getattr(self.backbone, "num_features", None)
         assert self.feat_dim is not None, "Cannot infer feature dim; ensure DINOv3 Hub model exposes embed_dim."
 
