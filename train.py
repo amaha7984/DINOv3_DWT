@@ -10,7 +10,7 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 
 from model import DINOv3WithDWT
-from data import prepare_dataloader, train_transforms, val_transforms
+from data import prepare_dataloader, get_transforms
 from utils import ddp_setup, save_checkpoint
 
 def train_one_epoch(model, loader, criterion, optimizer, device):
@@ -51,8 +51,8 @@ def train(rank, world_size, args):
     device = torch.device(f"cuda:{rank}")
 
     batch_per_gpu = args.batch_size // world_size
-    train_loader = prepare_dataloader(args.train_path, train_transforms(), batch_per_gpu, is_train=True)
-    val_loader = prepare_dataloader(args.val_path, val_transforms(), batch_per_gpu, is_train=False)
+    train_loader = prepare_dataloader(args.train_path, get_transforms(), batch_per_gpu, is_train=True)
+    val_loader = prepare_dataloader(args.val_path, get_transforms(), batch_per_gpu, is_train=False)
 
     model = DINOv3WithDWT(num_classes=args.num_classes, use_all_bands=True, weights=".../weights/dinov3_vitl16_pretrain_sat493m-eadcf0ff.pth", freeze_backbone=True).to(device)
     model = DDP(model, device_ids=[rank])
