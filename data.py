@@ -1,6 +1,7 @@
 from torch.utils.data import Dataset
 from torchvision.datasets import ImageFolder
 import torchvision.transforms as transforms
+from torch.utils.data import DataLoader, DistributedSampler
 
 class Satellite_Dataset(Dataset):
     def __init__(self, dir_path, transform=None):
@@ -19,3 +20,7 @@ def get_transforms():
         transforms.Normalize(mean=(0.496, 0.496, 0.496), std=(0.244, 0.244, 0.244))
     ])
 
+def prepare_dataloader(path, transform, batch_size, is_train=True):
+    dataset = Satellite_Dataset(path, transform=transform)
+    sampler = DistributedSampler(dataset, shuffle=is_train)
+    return DataLoader(dataset, batch_size=batch_size, sampler=sampler, num_workers=4, pin_memory=True)
